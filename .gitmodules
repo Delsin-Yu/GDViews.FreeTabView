@@ -1,0 +1,4 @@
+[submodule "GDViews.FreeTabView.Tests"]
+	path = GDViews.FreeTabView.Tests
+	url = https://github.com/Delsin-Yu/GDViews.FreeTabView.Tests.git
+	branch = main
