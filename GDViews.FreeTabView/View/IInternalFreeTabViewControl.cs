@@ -1,10 +1,13 @@
 ﻿namespace GodotViews;
 
-public interface IFreeTabViewControl { }
+/// <summary>
+/// Use to represent a view item instance inheriting <see cref="FreeTabViewItemT{TOptionalArg}"/> or <see cref="FreeTabViewItem"/>.
+/// </summary>
+public interface IFreeTabViewItem { }
 
-internal interface IInternalFreeTabViewControl : IFreeTabViewControl
+internal interface IInternalFreeTabViewItem : IFreeTabViewItem
 {
-    public void InitializeView();
-    public void ShowView(object? optionalArg);
-    public void HideView();
+    public void InitializeViewItem();
+    public void ShowViewItem(object? optionalArg);
+    public void HideViewItem();
 }

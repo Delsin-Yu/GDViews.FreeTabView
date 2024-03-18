@@ -7,7 +7,7 @@ namespace GodotViews.ViewTweeners;
 /// <summary>
 /// Fades views between solid and transparent for transitions.
 /// </summary>
-public class FadeViewTweener : IViewTweener
+public class FadeViewItemTweener : IViewItemTweener
 {
     private readonly Dictionary<Control, Tween> _activeTween = new();
 
@@ -18,26 +18,26 @@ public class FadeViewTweener : IViewTweener
     /// </summary>
     public float FadeTime { get; set; } = 0.1f;
 
-    private void KillAndCreateNewTween(Control view, in Color color, string methodName)
+    private void KillAndCreateNewTween(Control viewItem, in Color color, string methodName)
     {
-        if (_activeTween.TryGetValue(view, out var runningTween))
+        if (_activeTween.TryGetValue(viewItem, out var runningTween))
         {
             runningTween.Kill();
             runningTween.Dispose();
         }
 
-        runningTween = view.CreateTween();
-        _activeTween[view] = runningTween;
+        runningTween = viewItem.CreateTween();
+        _activeTween[viewItem] = runningTween;
 
         runningTween
-            .TweenProperty(view, ModulatePath, color, FadeTime)
+            .TweenProperty(viewItem, ModulatePath, color, FadeTime)
             .Dispose();
         runningTween
             .TweenCallback(
                 Callable.From(
                     () =>
                     {
-                        if (!_activeTween.Remove(view, out var tween)) return;
+                        if (!_activeTween.Remove(viewItem, out var tween)) return;
                         tween.Kill();
                     }
                 )
@@ -46,14 +46,14 @@ public class FadeViewTweener : IViewTweener
     }
 
     /// <inheritdoc/>
-    public void Init(Control view) => 
-        view.Modulate = Colors.Transparent;
+    public void Init(Control viewItem) => 
+        viewItem.Modulate = Colors.Transparent;
 
     /// <inheritdoc/>
-    public void Show(Control view) => 
-        KillAndCreateNewTween(view, Colors.White, "Show");
+    public void Show(Control viewItem) => 
+        KillAndCreateNewTween(viewItem, Colors.White, "Show");
 
     /// <inheritdoc/>
-    public void Hide(Control view) => 
-        KillAndCreateNewTween(view, Colors.Transparent, "Hide");
+    public void Hide(Control viewItem) => 
+        KillAndCreateNewTween(viewItem, Colors.Transparent, "Hide");
 }
