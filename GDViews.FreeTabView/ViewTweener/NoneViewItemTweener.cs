@@ -16,11 +16,11 @@ public class NoneViewItemTweener : IViewItemTweener
     private NoneViewItemTweener() { }
 
     /// <inheritdoc/>
-    public void Init(Control viewItem) { }
+    public void Init(Control viewItem, ref object? additionalData) { }
 
     /// <inheritdoc/>
-    public void Show(Control viewItem) => viewItem.Show();
+    public void Show(Control viewItem, object? additionalData) => viewItem.Show();
 
     /// <inheritdoc/>
-    public void Hide(Control viewItem) => viewItem.Hide();
+    public void Hide(Control viewItem, object? additionalData) => viewItem.Hide();
 }

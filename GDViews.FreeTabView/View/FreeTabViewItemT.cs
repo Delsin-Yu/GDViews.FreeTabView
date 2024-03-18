@@ -14,7 +14,7 @@ public abstract partial class FreeTabViewItemT<TOptionalArg> : Control, IInterna
     /// <summary>
     /// The tweener associated to this view item.
     /// </summary>
-    protected IViewItemTweener ItemTweener
+    protected IViewItemTweener ViewItemTweener
     {
         get => _tweener ?? NoneViewItemTweener.Instance;
         set => _tweener = value;
@@ -22,11 +22,12 @@ public abstract partial class FreeTabViewItemT<TOptionalArg> : Control, IInterna
 
     private string? _cachedName;
     private IViewItemTweener? _tweener;
+    private object? _tweenerData;
 
     internal string LocalName => _cachedName ??= Name;
 
     /// <summary>
-    /// Called when the <see cref="FreeTabView"/> is initializing the view.
+    /// Called when the <see cref="FreeTabView"/> is initializing the view item.
     /// </summary>
     /// <remarks>
     /// This method is considered "Protected", that is, throwing an exception inside the override of this method will not cause the component to malfunction.
@@ -90,7 +91,7 @@ public abstract partial class FreeTabViewItemT<TOptionalArg> : Control, IInterna
 
     void IInternalFreeTabViewItem.ShowViewItem(object? optionalArg)
     {
-        ItemTweener.Show(this);
+        ViewItemTweener.Show(this, _tweenerData);
         if (optionalArg == null)
         {
             DelegateRunner.RunProtected<TOptionalArg?>(_OnViewItemShow, default, "Show View Item", LocalName);
@@ -107,13 +108,13 @@ public abstract partial class FreeTabViewItemT<TOptionalArg> : Control, IInterna
 
     void IInternalFreeTabViewItem.HideViewItem()
     {
-        ItemTweener.Hide(this);
+        ViewItemTweener.Hide(this, _tweenerData);
         DelegateRunner.RunProtected(_OnViewItemHide, "Hide View Item", LocalName);
     }
 
     void IInternalFreeTabViewItem.InitializeViewItem()
     {
-        ItemTweener.Init(this);
         DelegateRunner.RunProtected(_OnViewItemInitialize, "View Item Initialization", LocalName);
+        ViewItemTweener.Init(this, ref _tweenerData);
     }
 }

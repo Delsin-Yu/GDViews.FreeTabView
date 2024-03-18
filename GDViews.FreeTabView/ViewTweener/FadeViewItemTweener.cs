@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Godot;
 
 namespace GodotViews.ViewTweeners;
@@ -18,7 +17,7 @@ public class FadeViewItemTweener : IViewItemTweener
     /// </summary>
     public float FadeTime { get; set; } = 0.1f;
 
-    private void KillAndCreateNewTween(Control viewItem, in Color color, string methodName)
+    private void KillAndCreateNewTween(Control viewItem, in Color color, bool showAfterTween)
     {
         if (_activeTween.TryGetValue(viewItem, out var runningTween))
         {
@@ -37,6 +36,7 @@ public class FadeViewItemTweener : IViewItemTweener
                 Callable.From(
                     () =>
                     {
+                        viewItem.Visible = showAfterTween;
                         if (!_activeTween.Remove(viewItem, out var tween)) return;
                         tween.Kill();
                     }
@@ -46,14 +46,23 @@ public class FadeViewItemTweener : IViewItemTweener
     }
 
     /// <inheritdoc/>
-    public void Init(Control viewItem) => 
+    public void Init(Control viewItem, ref object? additionalData)
+    {
+        additionalData = new Dictionary<Control, NodeUtils.CachedControlInfo>();
         viewItem.Modulate = Colors.Transparent;
+    }
 
     /// <inheritdoc/>
-    public void Show(Control viewItem) => 
-        KillAndCreateNewTween(viewItem, Colors.White, "Show");
+    public void Show(Control viewItem, object? additionalData)
+    {
+        NodeUtils.SetNodeChildAvailability(viewItem, (Dictionary<Control, NodeUtils.CachedControlInfo>)additionalData!, true);
+        KillAndCreateNewTween(viewItem, Colors.White, true);
+    }
 
     /// <inheritdoc/>
-    public void Hide(Control viewItem) => 
-        KillAndCreateNewTween(viewItem, Colors.Transparent, "Hide");
+    public void Hide(Control viewItem, object? additionalData)
+    {
+        NodeUtils.SetNodeChildAvailability(viewItem, (Dictionary<Control, NodeUtils.CachedControlInfo>)additionalData!, false);
+        KillAndCreateNewTween(viewItem, Colors.Transparent, false);
+    }
 }

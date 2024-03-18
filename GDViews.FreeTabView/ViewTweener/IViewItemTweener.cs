@@ -11,17 +11,20 @@ public interface IViewItemTweener
     /// This sets the default visual appearance for a view item.
     /// </summary>
     /// <param name="viewItem">The target view item.</param>
-    void Init(Control viewItem);
+    /// <param name="additionalData">Optional additional data required by this tweener.</param>
+    void Init(Control viewItem, ref object? additionalData);
     
     /// <summary>
     /// This async method manages the behavior when the view item is showing up.
     /// </summary>
     /// <param name="viewItem">The target view item.</param>
-    void Show(Control viewItem);
+    /// <param name="additionalData">Optional additional data required by this tweener.</param>
+    void Show(Control viewItem, object? additionalData);
     
     /// <summary>
     /// This async method manages the behavior when the view item is hiding out.
     /// </summary>
     /// <param name="viewItem">The target view item.</param>
-    void Hide(Control viewItem);
+    /// <param name="additionalData">Optional additional data required by this tweener.</param>
+    void Hide(Control viewItem, object? additionalData);
 }
