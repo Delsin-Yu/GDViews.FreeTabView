@@ -1,7 +1,7 @@
 namespace GodotViews;
 
 /// <summary>
-/// Inherit this type to create a view control that's used by <see cref="FreeTabView"/>,
+/// Inherit this type to create a view item that's used by <see cref="FreeTabView"/>,
 /// this variant does not have optional argument support.
 /// </summary>
 public abstract partial class FreeTabViewItem : FreeTabViewItemT<object>

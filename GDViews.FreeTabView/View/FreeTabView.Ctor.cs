@@ -7,18 +7,18 @@ namespace GodotViews;
 
 public partial class FreeTabView
 {
-    private void InitializeTab(int i, CheckButton checkButton, IInternalFreeTabViewItem view)
+    private void InitializeTab(int i, CheckButton checkButton, IInternalFreeTabViewItem viewItem)
     {
         _checkButtons[i] = checkButton;
-        _viewItems[i] = view;
+        _viewItems[i] = viewItem;
         var localI = i;
         checkButton.Toggled += pressed =>
         {
             if (pressed) Show(localI);
         };
         checkButton.ButtonGroup = _buttonGroup;
-        DelegateRunner.RunProtected(view.InitializeViewItem, "View Initialization", ((Control)view).Name);
-        view.HideViewItem();
+        DelegateRunner.RunProtected(viewItem.InitializeViewItem, "View Initialization", ((Control)viewItem).Name);
+        viewItem.HideViewItem();
     }
 
     private static void BoundsCheck(int count, [CallerArgumentExpression(nameof(count))] string? paramName = null)
@@ -44,7 +44,7 @@ public partial class FreeTabView
     /// </summary>
     /// <param name="tabSetups">A collection of <see cref="TabPrefabSetup"/>s to initialize the <see cref="FreeTabView"/>.</param>
     /// <param name="viewsContainer">The container to instantiate the <see cref="PackedScene"/>s under.</param>
-    /// <param name="defaultArgumentResolver">An optional delegate to resolve the optional argument passes to a view when it's shown.</param>
+    /// <param name="defaultArgumentResolver">An optional delegate to resolve the optional argument passes to a view item when it's shown.</param>
     /// <returns>An instance of the <see cref="FreeTabView"/> that's ready for use.</returns>
     public static FreeTabView CreateFromPrefab(in ReadOnlySpan<TabPrefabSetup> tabSetups, Control viewsContainer, Func<IFreeTabViewItem, object?>? defaultArgumentResolver = null)
     {
@@ -54,10 +54,10 @@ public partial class FreeTabView
 
         for (var i = 0; i < tabSetups.Length; i++)
         {
-            var (checkButton, viewPrefab) = tabSetups[i];
-            var view = viewPrefab.Instantiate<IInternalFreeTabViewItem>();
-            viewsContainer.AddChild((Control)view);
-            instance.InitializeTab(i, checkButton, view);
+            var (checkButton, viewItemPrefab) = tabSetups[i];
+            var viewItem = viewItemPrefab.Instantiate<IInternalFreeTabViewItem>();
+            viewsContainer.AddChild((Control)viewItem);
+            instance.InitializeTab(i, checkButton, viewItem);
         }
         
         return instance;
@@ -69,7 +69,7 @@ public partial class FreeTabView
     /// </summary>
     /// <param name="tabSetups">A collection of <see cref="TabPrefabSetup"/>s to initialize the <see cref="FreeTabView"/>.</param>
     /// <param name="viewsContainer">The container to instantiate the <see cref="PackedScene"/>s under.</param>
-    /// <param name="defaultArgumentResolver">An optional delegate to resolve the optional argument passes to a view when it's shown.</param>
+    /// <param name="defaultArgumentResolver">An optional delegate to resolve the optional argument passes to a view item when it's shown.</param>
     /// <returns>An instance of the <see cref="FreeTabView"/> that's ready for use.</returns>
     public static FreeTabView CreateFromPrefab(in IReadOnlyList<TabPrefabSetup> tabSetups, Control viewsContainer, Func<IFreeTabViewItem, object?>? defaultArgumentResolver = null)
     {
@@ -79,10 +79,10 @@ public partial class FreeTabView
 
         for (var i = 0; i < tabSetups.Count; i++)
         {
-            var (checkButton, viewPrefab) = tabSetups[i];
-            var view = viewPrefab.Instantiate<IInternalFreeTabViewItem>();
-            viewsContainer.AddChild((Control)view);
-            instance.InitializeTab(i, checkButton, view);
+            var (checkButton, viewItemPrefab) = tabSetups[i];
+            var viewItem = viewItemPrefab.Instantiate<IInternalFreeTabViewItem>();
+            viewsContainer.AddChild((Control)viewItem);
+            instance.InitializeTab(i, checkButton, viewItem);
         }
         
         return instance;
@@ -93,7 +93,7 @@ public partial class FreeTabView
     /// this overload references the given <see cref="IFreeTabViewItem"/>s.
     /// </summary>
     /// <param name="tabSetups">A collection of <see cref="TabInstanceSetup"/>s to initialize the <see cref="FreeTabView"/>.</param>
-    /// <param name="defaultArgumentResolver">An optional delegate to resolve the optional argument passes to a view when it's shown.</param>
+    /// <param name="defaultArgumentResolver">An optional delegate to resolve the optional argument passes to a view item when it's shown.</param>
     /// <returns>An instance of the <see cref="FreeTabView"/> that's ready for use.</returns>
     public static FreeTabView CreateFromInstance(in ReadOnlySpan<TabInstanceSetup> tabSetups, Func<IFreeTabViewItem, object?>? defaultArgumentResolver = null)
     {
@@ -103,8 +103,8 @@ public partial class FreeTabView
 
         for (var i = 0; i < tabSetups.Length; i++)
         {
-            var (checkButton, viewInstance) = tabSetups[i];
-            instance.InitializeTab(i, checkButton, (IInternalFreeTabViewItem)viewInstance);
+            var (checkButton, viewItemInstance) = tabSetups[i];
+            instance.InitializeTab(i, checkButton, (IInternalFreeTabViewItem)viewItemInstance);
         }
         
         return instance;
@@ -115,7 +115,7 @@ public partial class FreeTabView
     /// this overload references the given <see cref="IFreeTabViewItem"/>s.
     /// </summary>
     /// <param name="tabSetups">A collection of <see cref="TabInstanceSetup"/>s to initialize the <see cref="FreeTabView"/>.</param>
-    /// <param name="defaultArgumentResolver">An optional delegate to resolve the optional argument passes to a view when it's shown.</param>
+    /// <param name="defaultArgumentResolver">An optional delegate to resolve the optional argument passes to a view item when it's shown.</param>
     /// <returns>An instance of the <see cref="FreeTabView"/> that's ready for use.</returns>
     public static FreeTabView CreateFromInstance(in IReadOnlyList<TabInstanceSetup> tabSetups, Func<IFreeTabViewItem, object?>? defaultArgumentResolver = null)
     {
@@ -125,8 +125,8 @@ public partial class FreeTabView
 
         for (var i = 0; i < tabSetups.Count; i++)
         {
-            var (checkButton, viewInstance) = tabSetups[i];
-            instance.InitializeTab(i, checkButton, (IInternalFreeTabViewItem)viewInstance);
+            var (checkButton, viewItemInstance) = tabSetups[i];
+            instance.InitializeTab(i, checkButton, (IInternalFreeTabViewItem)viewItemInstance);
         }
         
         return instance;

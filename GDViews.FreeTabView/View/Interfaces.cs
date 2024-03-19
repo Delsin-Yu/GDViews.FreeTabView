@@ -3,7 +3,7 @@
 /// <summary>
 /// Use to represent a view item instance inheriting <see cref="FreeTabViewItemT{TOptionalArg}"/> or <see cref="FreeTabViewItem"/>.
 /// </summary>
-public interface IFreeTabViewItem { }
+public interface IFreeTabViewItem;
 
 internal interface IInternalFreeTabViewItem : IFreeTabViewItem
 {

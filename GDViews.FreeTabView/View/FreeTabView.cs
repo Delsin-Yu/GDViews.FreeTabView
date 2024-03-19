@@ -7,8 +7,8 @@ namespace GodotViews;
 /// Defines a Tab/Prefab setup.
 /// </summary>
 /// <param name="TabButton">The check button that's used as a tab.</param>
-/// <param name="ViewPrefab">The packed scene containing a script inherits the <see cref="FreeTabViewItemT{TOptionalArg}"/> or <see cref="FreeTabViewItem"/> type.</param>
-public record struct TabPrefabSetup(CheckButton TabButton, PackedScene ViewPrefab);
+/// <param name="ViewItemPrefab">The packed scene containing a script inherits the <see cref="FreeTabViewItemT{TOptionalArg}"/> or <see cref="FreeTabViewItem"/> type.</param>
+public record struct TabPrefabSetup(CheckButton TabButton, PackedScene ViewItemPrefab);
 
 /// <summary>
 /// Defines a Tab/ViewItem setup.
@@ -18,19 +18,19 @@ public record struct TabPrefabSetup(CheckButton TabButton, PackedScene ViewPrefa
 public record struct TabInstanceSetup(CheckButton TabButton, IFreeTabViewItem ViewItemInstance);
 
 /// <summary>
-/// <para>A view controller used to achieve the logic of a <see cref="TabContainer"/>.</para>
+/// <para>A view item controller used to achieve the logic of a <see cref="TabContainer"/>.</para>
 /// <para><see cref="FreeTabView"/>s are built via code, using scripts inheriting the <see cref="FreeTabViewItemT{TOptionalArg}"/> or <see cref="FreeTabViewItem"/> type to create the view items,
 /// and create a <see cref="FreeTabView"/> instance from them using FreeTabView.CreateFromInstance or FreeTabView.CreateFromPrefab.</para>
 /// </summary>
 public partial class FreeTabView
 {
     /// <summary>
-    /// Called once when showing a view.
+    /// Called once when showing a view item.
     /// </summary>
     public event Action<IFreeTabViewItem>? OnViewItemShow;
     
     /// <summary>
-    /// Called once when hiding a view.
+    /// Called once when hiding a view item.
     /// </summary>
     public event Action<IFreeTabViewItem>? OnViewItemHide;
     
@@ -44,18 +44,18 @@ public partial class FreeTabView
     private void TryHideCurrentViewItem()
     {
         if (_currentViewItemIndex == null) return;
-        var view = _viewItems[_currentViewItemIndex.Value];
-        view.HideViewItem();
-        OnViewItemHide?.Invoke(view);
+        var viewItem = _viewItems[_currentViewItemIndex.Value];
+        viewItem.HideViewItem();
+        OnViewItemHide?.Invoke(viewItem);
     }
 
     private void OpenWithArgumentResolver(Func<IFreeTabViewItem, object?>? argumentResolver)
     {
-        var view = _viewItems[_currentViewItemIndex!.Value];
+        var viewItem = _viewItems[_currentViewItemIndex!.Value];
         object? argument = null;
-        if (argumentResolver != null) argument = argumentResolver(view);
-        view.ShowViewItem(argument);
-        OnViewItemShow?.Invoke(view);
+        if (argumentResolver != null) argument = argumentResolver(viewItem);
+        viewItem.ShowViewItem(argument);
+        OnViewItemShow?.Invoke(viewItem);
         UpdateTabs();
     }
 
@@ -70,36 +70,36 @@ public partial class FreeTabView
     }
     
     /// <summary>
-    /// Shows a view at the given index.
+    /// Shows a view item at the given index.
     /// </summary>
-    /// <param name="index">The view index.</param>
-    /// <exception cref="ArgumentOutOfRangeException">Throws then the view index is greater or equal to the view length.</exception>
+    /// <param name="index">The view item index.</param>
+    /// <exception cref="ArgumentOutOfRangeException">Throws then the view item index is greater or equal to the view items length.</exception>
     public void Show(int index) => Show(index, null);
     
 
     /// <summary>
-    /// Shows a view at the given index, and pass an <paramref name="optionalArg"/> to the target view.
+    /// Shows a view item at the given index, and pass an <paramref name="optionalArg"/> to the target view item.
     /// </summary>
-    /// <param name="index">The view index.</param>
-    /// <param name="optionalArg">An optional argument pass to the target view.</param>
-    /// <exception cref="ArgumentOutOfRangeException">Throws then the view index is greater or equal to the view length.</exception>
+    /// <param name="index">The view item index.</param>
+    /// <param name="optionalArg">An optional argument pass to the target view item.</param>
+    /// <exception cref="ArgumentOutOfRangeException">Throws then the view item index is greater or equal to the view items length.</exception>
     public void Show(int index, object? optionalArg)
     {
         LengthCheck(index, _viewItems.Length);
         TryHideCurrentViewItem();
         _currentViewItemIndex = index;
-        var view = _viewItems[index];
-        view.ShowViewItem(optionalArg ?? _defaultArgumentResolver?.Invoke(view));
-        OnViewItemShow?.Invoke(view);
+        var viewItem = _viewItems[index];
+        viewItem.ShowViewItem(optionalArg ?? _defaultArgumentResolver?.Invoke(viewItem));
+        OnViewItemShow?.Invoke(viewItem);
         UpdateTabs();
     }
 
     /// <summary>
-    /// Shows the next view.<br/>
-    /// If no view shown at the moment, the first view will be shown.<br/>
+    /// Shows the next view item.<br/>
+    /// If no view item shown at the moment, the first view item will be shown.<br/>
     /// </summary>
-    /// <param name="wrapped">If set to true, the system will show the first view when the current view is already the last.</param>
-    /// <param name="argumentResolver">Called before showing the selected view, developers may use this delegate to determine the optional argument passes to the view.</param>
+    /// <param name="wrapped">If set to true, the system will show the first view item when the current view item is already the last.</param>
+    /// <param name="argumentResolver">Called before showing the selected view item, developers may use this delegate to determine the optional argument passes to the view item.</param>
     public void ShowNext(bool wrapped = true, Func<IFreeTabViewItem, object?>? argumentResolver = null)
     {
         TryHideCurrentViewItem();
@@ -124,11 +124,11 @@ public partial class FreeTabView
     }
 
     /// <summary>
-    /// Shows the previous view.<br/>
-    /// If no view shown at the moment, the first view will be shown.<br/>
+    /// Shows the previous view item.<br/>
+    /// If no view item shown at the moment, the first view item will be shown.<br/>
     /// </summary>
-    /// <param name="wrapped">If set to true, the system will show the last view when the current view is already the first.</param>
-    /// <param name="argumentResolver">Called before showing the selected view, developers may use this delegate to determine the optional argument passes to the view.</param>
+    /// <param name="wrapped">If set to true, the system will show the last view item when the current view item is already the first.</param>
+    /// <param name="argumentResolver">Called before showing the selected view item, developers may use this delegate to determine the optional argument passes to the view item.</param>
     public void ShowPrevious(bool wrapped = true, Func<IFreeTabViewItem, object?>? argumentResolver = null)
     {
         TryHideCurrentViewItem();

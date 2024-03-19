@@ -5,7 +5,7 @@ using GodotViews.ViewTweeners;
 namespace GodotViews;
 
 /// <summary>
-/// Inherit this type to create a view control that's used by <see cref="FreeTabView"/>.
+/// Inherit this type to create a view item that's used by <see cref="FreeTabView"/>.
 /// </summary>
 /// <typeparam name="TOptionalArg">The type for the optional argument.</typeparam>
 [GlobalClass]
