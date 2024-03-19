@@ -3,7 +3,7 @@
 ## Introduction
 
 Supports in `Godot 4.1+` with .Net module.  
-***GDViews.FreeTabView*** is a `Godot 4` UI Component that's useful for creating highly customizable tab views.
+***GDViews.FreeTabView*** is a `Godot 4` UI Component that's useful for creating highly customizable tab views.  
 
 ## Installation
 
@@ -55,8 +55,13 @@ For `csproj` PackageReference
 
 ## Glossarys
 
-`FreeTabView / TabView`: The C# component that controls a group of associated `TabViewItem` and handles the tab view behavior.
-`FreeTabViewItem / TabViewItem`: The script(s) inheriting the `FreeTabViewItem` or `FreeTabViewItemT`, developer may create a `FreeTabView` from a collection of `FreeTabViewItem`s.
+### `FreeTabView / TabView`
+
+The C# type that controls a group of associated `TabViewItem` and handles the tab view behavior, it provides common functionality such as switching `ViewItems` from code or `Tabs` similar to a `TabContainer`, as well as passing `showing/hiding` events to `ViewItems`.
+
+### `FreeTabViewItem / TabViewItem`
+
+The script(s) inheriting the `FreeTabViewItem` or `FreeTabViewItemT`, attaching the script to a control to make it a `TabViewItem`, developer may create a `FreeTabView` from a collection of `FreeTabViewItem`s.
 
 ## API Usage
 
@@ -167,7 +172,7 @@ public partial class Main : Node
     {
         // Developer may use their own preferred way to handle switching between tabs.
         if (Input.IsActionJustPressed("ui_left")) _tabView.ShowPrevious();
-        if (Input.IsActionJustPressed("ui_right")) _tabView.ShowPrevious();
+        if (Input.IsActionJustPressed("ui_right")) _tabView.ShowNext();
     }
 }
 ```
@@ -216,7 +221,7 @@ public partial class Main : Node
     {
         // Developer may use their own preferred way to handle switching between tabs.
         if (Input.IsActionJustPressed("ui_left")) _tabView.ShowPrevious();
-        if (Input.IsActionJustPressed("ui_right")) _tabView.ShowPrevious();
+        if (Input.IsActionJustPressed("ui_right")) _tabView.ShowNext();
     }
 }
 ```
@@ -227,16 +232,145 @@ public partial class Main : Node
 
 #### Static Factory Methods
 
-> WIP:Introduction to the Static Factory Methods  
-> WIP:CreateFromPrefab  
-> WIP:CreateFromInstance  
+Use factory functions to instantiate `FreeTabViews`.
+
+##### `FreeTabView.CreateFromPrefab`
+
+Create an instance of the `FreeTabView` from the given `TabPrefabSetups`, this overload instantiates the given `PackedScenes` under the `viewsContainer`.
+
+```csharp
+
+[Export] private PackedScene _viewItem1;
+[Export] private PackedScene _viewItem2;
+
+[Export] private CheckButton _tab1;
+[Export] private CheckButton _tab2;
+
+_tabView = FreeTabView.CreateFromPrefab(
+    [
+        new(_tab1, _viewItem1), 
+        new(_tab2, _viewItem2), 
+    ],
+    _container
+);
+```
+
+##### `FreeTabView.CreateFromInstance`
+
+Create an instance of the `FreeTabView` from the given `TabPrefabSetups`, this overload references the given `IFreeTabViewItems`.
+
+```csharp
+
+[Export] private PackedScene _viewItem1;
+[Export] private PackedScene _viewItem2;
+
+[Export] private CheckButton _tab1;
+[Export] private CheckButton _tab2;
+
+_tabView = FreeTabView.CreateFromPrefab(
+    [
+        new(_tab1, _viewItem1), 
+        new(_tab2, _viewItem2), 
+    ],
+    _container
+);
+```
 
 #### Instance Methods
 
-> WIP:Introduction to the Instance Methods  
-> WIP:Show  
-> WIP:ShowNext  
-> WIP:ShowPrevious  
+A `FreeTabView` exposes four functions to the developer to switch between the `ViewItems`.
+
+##### `Show(int index)` / `Show(int index, object? optionalArg)`
+
+Shows a view item at the given index, the latter overload support passing an optional argument to the target view item.
+
+```csharp
+// Shows the first view item.
+_tabView.Show(0);
+
+// Shows the second view item, 
+// and pass the "Hello World" to its `_OnViewItemShow` method.
+_tabView.Show(1, "Hello World");
+```
+
+##### `ShowNext` / `ShowPrevious`
+
+Shows the next/previous view item. If no view item shown at the moment, the first view item will be shown.  
+The first argument determines if the `TabView` should warp to the first/last view item if current shown view item is the last/first.
+
+```csharp
+// Shows the first view item.
+_tabView.Show(0);
+
+// Shows the previous view item.
+_tabView.ShowPrevious();
+_tabView.ShowNext();
+```
+
+#### `ArgumentResolver`
+
+When using `ShowNext`/`ShowPrevious` API or `CheckButtons` to switch between view items, it is hard to pass argument to the displaying view items, in this case developer may pass an `argument resolver delegate` when constructing the `FreeTabView` or to the `ShowNext`/`ShowPrevious` API.
+
+##### Default Resolver
+
+Passing a delegate with the following signature `Func<IFreeTabViewItem, object?>` to the factory method as the default `ArgumentResolver`, this resolver gets called when calling `Show(0)`, `Show(0, null)`, `ShowPrevious()`, and `ShowNext()` API, developer may write their own logic to return the desired argument based on the given `IFreeTabViewItem` instance.
+
+```csharp
+using Godot;
+
+/// <summary>
+/// Attached to a node in scene tree.
+/// </summary>
+public partial class Main : Node
+{
+    // Assigned in Godot Editor, through inspector.
+    [Export] private MyViewItem _viewItem1;
+    [Export] private MyViewItem2 _viewItem2;
+
+    [Export] private CheckButton _tab1;
+    [Export] private CheckButton _tab2;
+
+    private FreeTabView _tabView;
+
+    public override void _Ready()
+    {
+        // Construct a tab view on ready.
+        _tabView = FreeTabView.CreateFromInstance(
+            [
+                // Associate a tab to its corresponding view item instance.
+                new TabInstanceSetup(_tab1, _viewItem1), 
+                new TabInstanceSetup(_tab2, _viewItem2), 
+            ],
+            ArgumentResolver
+        );
+        
+        return;
+        
+        object? ArgumentResolver(IFreeTabViewItem arg)
+        {
+            if (arg == _viewItem1) return "Hello World!";
+            if (arg == _viewItem2) return 10;
+            return null;
+        }
+    }
+}
+```
+
+##### Resolver for `ShowNext` / `ShowPrevious`
+
+Passing a delegate with the following signature `Func<IFreeTabViewItem, object?>` to the `ShowPrevious()`, and `ShowNext()` API as the `ArgumentResolver`, developer may write their own logic to return the desired argument based on the given `IFreeTabViewItem` instance. Passing null to these two APIs will fallback to the `default ArgumentResolver`.
+
+```csharp
+object? ArgumentResolver(IFreeTabViewItem arg)
+{
+    if (arg == _viewItem1) return "Hello World!";
+    if (arg == _viewItem2) return 10;
+    return null;
+}
+
+_tabView.ShowPrevious(argumentResolver: ArgumentResolver);
+_tabView.ShowNext(argumentResolver: ArgumentResolver);
+```
 
 ### The `FreeTabViewItem` / `FreeTabViewItemT`
 

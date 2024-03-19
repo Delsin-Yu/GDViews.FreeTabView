@@ -98,9 +98,9 @@ public partial class FreeTabView
     /// Shows the next view item.<br/>
     /// If no view item shown at the moment, the first view item will be shown.<br/>
     /// </summary>
-    /// <param name="wrapped">If set to true, the system will show the first view item when the current view item is already the last.</param>
+    /// <param name="warp">If set to true, the component will show the first view item when the current view item is already the last.</param>
     /// <param name="argumentResolver">Called before showing the selected view item, developers may use this delegate to determine the optional argument passes to the view item.</param>
-    public void ShowNext(bool wrapped = true, Func<IFreeTabViewItem, object?>? argumentResolver = null)
+    public void ShowNext(bool warp = true, Func<IFreeTabViewItem, object?>? argumentResolver = null)
     {
         TryHideCurrentViewItem();
 
@@ -112,7 +112,7 @@ public partial class FreeTabView
         {
             if (_currentViewItemIndex + 1 >= _viewItems.Length)
             {
-                if (wrapped) _currentViewItemIndex = 0;
+                if (warp) _currentViewItemIndex = 0;
             }
             else
             {
@@ -127,15 +127,15 @@ public partial class FreeTabView
     /// Shows the previous view item.<br/>
     /// If no view item shown at the moment, the first view item will be shown.<br/>
     /// </summary>
-    /// <param name="wrapped">If set to true, the system will show the last view item when the current view item is already the first.</param>
+    /// <param name="warp">If set to true, the component will show the last view item when the current view item is already the first.</param>
     /// <param name="argumentResolver">Called before showing the selected view item, developers may use this delegate to determine the optional argument passes to the view item.</param>
-    public void ShowPrevious(bool wrapped = true, Func<IFreeTabViewItem, object?>? argumentResolver = null)
+    public void ShowPrevious(bool warp = true, Func<IFreeTabViewItem, object?>? argumentResolver = null)
     {
         TryHideCurrentViewItem();
 
         if (_currentViewItemIndex - 1 < 0)
         {
-            if (wrapped) _currentViewItemIndex =  _viewItems.Length - 1;
+            if (warp) _currentViewItemIndex =  _viewItems.Length - 1;
         }
         else
         {
