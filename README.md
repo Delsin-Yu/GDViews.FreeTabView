@@ -32,6 +32,8 @@ For `csproj` PackageReference
 ## Table of Contents
 
 - [Glossarys](#glossarys)
+  - [`FreeTabView / TabView`](#freetabview--tabview)
+  - [`FreeTabViewItem / TabViewItem`](#freetabviewitem--tabviewitem)
 - [API Usage](#api-usage)
   - [Creating a `ViewItem`](#creating-a-viewitem)
     - [A Simple Example](#a-simple-example)
@@ -42,7 +44,14 @@ For `csproj` PackageReference
 - [Component Documentation](#component-documentation)
   - [The `FreeTabView`](#the-freetabview)
     - [Static Factory Methods](#static-factory-methods)
+      - [`FreeTabView.CreateFromPrefab`](#freetabviewcreatefromprefab)
+      - [`FreeTabView.CreateFromInstance`](#freetabviewcreatefrominstance)
     - [Instance Methods](#instance-methods)
+      - [`Show(int index)` / `Show(int index, object? optionalArg)`](#showint-index--showint-index-object-optionalarg)
+      - [`ShowNext` / `ShowPrevious`](#shownext--showprevious)
+    - [`ArgumentResolver`](#argumentresolver)
+      - [Default Resolver](#default-resolver)
+      - [Resolver for `ShowNext` / `ShowPrevious`](#resolver-for-shownext--showprevious)
   - [The `FreeTabViewItem` / `FreeTabViewItemT`](#the-freetabviewitem--freetabviewitemt)
     - [Event Methods Diagram](#event-methods-diagram)
   - [ViewItemTweeners](#viewitemtweeners)
