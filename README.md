@@ -40,7 +40,7 @@ For `csproj` PackageReference
     - [A Complex Example](#a-complex-example)
   - [Creating a `TabView`](#creating-a-tabview)
     - [Create from existing `ViewItem` Instances](#create-from-existing-viewitem-instances)
-    - [Create from `PackedScene`s](#create-from-packedscenes)
+    - [Create from `PackedScenes`](#create-from-packedscenes)
 - [Component Documentation](#component-documentation)
   - [The `FreeTabView`](#the-freetabview)
     - [Static Factory Methods](#static-factory-methods)
