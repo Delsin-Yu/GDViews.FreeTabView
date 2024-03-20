@@ -1,4 +1,4 @@
-# GDViews.FreeTabView [ WIP ]
+# GDViews.FreeTabView
 
 ## Introduction
 
@@ -186,7 +186,7 @@ public partial class Main : Node
 }
 ```
 
-#### Create from `PackedScene`s
+#### Create from `PackedScenes`
 
 For use cases where developer wish to store the `ViewItem`s as `PackedScene`s, `FreeTabView.CreateFromPrefab` can be used to construct the `FreeTabView`.
 
@@ -383,28 +383,79 @@ _tabView.ShowNext(argumentResolver: ArgumentResolver);
 
 ### The `FreeTabViewItem` / `FreeTabViewItemT`
 
-> WIP:Introduction to the two view item types  
+Inheriting the `FreeTabViewItem` or `FreeTabViewItemT` type, and attach the script to a `Control` node for it to work.
 
 #### Event Methods Diagram
 
-> WIP:Introduction to the event methods  
-> WIP:_OnViewItemInitialize  
-> WIP:_OnViewItemShow  
-> WIP:_OnViewItemHide  
-> WIP:_OnViewItemNotification  
-> WIP:_OnViewItemPredelete  
+While working with `ViewItems`, certain methods get called at a certain lifetime of a view item, a brief diagram can be summarised as follows.
+
+```mermaid
+---
+title: The Summary of Event Methods throughout the lifetime of a ViewItem
+---
+flowchart TD
+
+id1["_OnViewItemInitialize()"]
+id2["_OnViewItemShow()"]
+id4["_OnViewItemHide()"]
+id5["_OnViewItemPredelete()"]
+id6["_OnViewItemNotification()"]
+
+id0[["Component Calls"]] -.-> id1
+id1 -..->|Component Calls|id2
+
+subgraph Called Multiple Times before the View Item gets Freed
+id4 -..->|Component Calls|id2
+id2 -..->|Component Calls|id4
+end
+id6 -.->|Component Calls|id5
+id7[["Godot Calls"]] -.-> id6
+```
+
+1. When calling one of the factory methods (`FreeTabView.CreateFromInstance`/`FreeTabView.CreateFromPrefab`), after the component has done basic initializing, the `_OnViewItemInitialize` method of each associated view item instance gets invoked.
+2. When calling any of the `Show` API on a `TabView`, the tab view will call `_OnViewItemHide` on the currently shown view item and call `_OnViewItemShown` on the target view item.
+3. A `TabViewItem` delegates the `_Notification` engine call to `_OnViewItemNotification`, and calls `_OnViewItemPredelete` when necessary.
 
 ### ViewItemTweeners
 
-> WIP:Introduction to the tweeners  
+Developers may customize a view item's `visual transition behavior when showing/hiding` by accessing its `ViewItemTweener` property.
 
 #### Built-in Tweeners
 
-> WIP:Introduction to the built-in tweeners  
-> WIP:FadeViewItemTweener  
-> WIP:NoneViewItemTweener  
+There are two preconfigured Tweenrs provided with the component.
+
+1. NoneViewItemTweener: This tweener simply hides and shows the view items, it is also the default value of a `ViewItemTweener`, you may access the global instance of this tweener from `NoneViewItemTweener.Instance`.
+2. FadeViewItemTweener: This tweener performs fade transition for the view items' showing and hiding, after instantiating the tweener, you may configure the transition time by accessing its `FadeTime` property.
 
 #### Customize Tweeners
 
-> WIP:Introduction to the customised tweeners  
-> WIP:IViewItemTweener  
+By inheriting the `IViewItemTweener` interface, the developer may customize their transition effects.
+
+```csharp
+/// <summary>
+/// Defines the behavior for view transitions.
+/// </summary>
+public interface IViewItemTweener
+{
+    /// <summary>
+    /// This sets the default visual appearance for a view item.
+    /// </summary>
+    /// <param name="viewItem">The target view item.</param>
+    /// <param name="additionalData">Optional additional data required by this tweener.</param>
+    void Init(Control viewItem, ref object? additionalData);
+    
+    /// <summary>
+    /// This async method manages the behavior when the view item is showing up.
+    /// </summary>
+    /// <param name="viewItem">The target view item.</param>
+    /// <param name="additionalData">Optional additional data required by this tweener.</param>
+    void Show(Control viewItem, object? additionalData);
+    
+    /// <summary>
+    /// This async method manages the behavior when the view item is hiding out.
+    /// </summary>
+    /// <param name="viewItem">The target view item.</param>
+    /// <param name="additionalData">Optional additional data required by this tweener.</param>
+    void Hide(Control viewItem, object? additionalData);
+}
+```
