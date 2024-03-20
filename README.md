@@ -66,7 +66,7 @@ For `csproj` PackageReference
 
 ### `FreeTabView / TabView`
 
-The C# type that controls a group of associated `TabViewItem` and handles the tab view behavior, it provides common functionality such as switching `ViewItems` from code or `Tabs` similar to a `TabContainer`, as well as passing `showing/hiding` events to `ViewItems`.
+The C# type that controls a group of associated `TabViewItem` and handles the tab view behavior; it provides common functionality such as switching `ViewItems` from code or `Tabs` similar to a `TabContainer`, as well as passing `showing/hiding` events to `ViewItems`.
 
 ### `FreeTabViewItem / TabViewItem`
 
@@ -139,11 +139,11 @@ public partial class MyViewItem2 : FreeTabViewItem
 
 ### Creating a `TabView`
 
-The `FreeTabView` is pure C# implementation, so instead of attaching a script to a node in scene tree, developers need to create and use it in scripts, there are two ways for constructing a `FreeTabView` instance.
+The `FreeTabView` is pure C# implementation, so instead of attaching a script to a node in the scene tree, developers need to create and use it in scripts, there are two ways for constructing a `FreeTabView` instance.
 
 #### Create from existing `ViewItem` Instances
 
-For use cases where developer wish to instantiate their own intance of `ViewItem`, or simply leaving them in the scene tree, `FreeTabView.CreateFromInstance` can be used to construct the `FreeTabView`.
+For use cases where the developer wishes to instantiate their instance of `ViewItem`, or simply leave them in the scene tree, `FreeTabView.CreateFromInstance` can be used to construct the `FreeTabView`.
 
 ```csharp
 using Godot;
@@ -188,7 +188,7 @@ public partial class Main : Node
 
 #### Create from `PackedScenes`
 
-For use cases where developer wish to store the `ViewItem`s as `PackedScene`s, `FreeTabView.CreateFromPrefab` can be used to construct the `FreeTabView`.
+For use cases where the developer wishes to store the `ViewItem`s as `PackedScenes`, `FreeTabView.CreateFromPrefab` can be used to construct the `FreeTabView`.
 
 ```csharp
 using Godot;
@@ -291,7 +291,7 @@ A `FreeTabView` exposes four functions to the developer to switch between the `V
 
 ##### `Show(int index)` / `Show(int index, object? optionalArg)`
 
-Shows a view item at the given index, the latter overload support passing an optional argument to the target view item.
+Shows a view item at the given index, the latter overload supports passing an optional argument to the target view item.
 
 ```csharp
 // Shows the first view item.
@@ -304,8 +304,8 @@ _tabView.Show(1, "Hello World");
 
 ##### `ShowNext` / `ShowPrevious`
 
-Shows the next/previous view item. If no view item shown at the moment, the first view item will be shown.  
-The first argument determines if the `TabView` should warp to the first/last view item if current shown view item is the last/first.
+Shows the next/previous view item. If no view item is shown at the moment, the first view item will be shown.  
+The first argument determines if the `TabView` should warp to the first/last view item if the current shown view item is the last/first.
 
 ```csharp
 // Shows the first view item.
@@ -318,11 +318,11 @@ _tabView.ShowNext();
 
 #### `ArgumentResolver`
 
-When using `ShowNext`/`ShowPrevious` API or `CheckButtons` to switch between view items, it is hard to pass argument to the displaying view items, in this case developer may pass an `argument resolver delegate` when constructing the `FreeTabView` or to the `ShowNext`/`ShowPrevious` API.
+When using the `ShowNext`/`ShowPrevious` API or `CheckButtons` to switch between view items, it is hard to pass the argument to the displaying view items, in this case, the developer may pass an `argument resolver delegate` when constructing the `FreeTabView` or to the `ShowNext`/`ShowPrevious` API.
 
 ##### Default Resolver
 
-Passing a delegate with the following signature `Func<IFreeTabViewItem, object?>` to the factory method as the default `ArgumentResolver`, this resolver gets called when calling `Show(0)`, `Show(0, null)`, `ShowPrevious()`, and `ShowNext()` API, developer may write their own logic to return the desired argument based on the given `IFreeTabViewItem` instance.
+Passing a delegate with the following signature `Func<IFreeTabViewItem, object?>` to the factory method as the default `ArgumentResolver`, this resolver gets called when calling `Show(0)`, `Show(0, null)`, `ShowPrevious()`, and `ShowNext()` API, the developer may write their logic to return the desired argument based on the given `IFreeTabViewItem` instance.
 
 ```csharp
 using Godot;
@@ -367,7 +367,7 @@ public partial class Main : Node
 
 ##### Resolver for `ShowNext` / `ShowPrevious`
 
-Passing a delegate with the following signature `Func<IFreeTabViewItem, object?>` to the `ShowPrevious()`, and `ShowNext()` API as the `ArgumentResolver`, developer may write their own logic to return the desired argument based on the given `IFreeTabViewItem` instance. Passing null to these two APIs will fallback to the `default ArgumentResolver`.
+Passing a delegate with the following signature `Func<IFreeTabViewItem, object?>` to the `ShowPrevious()`, and `ShowNext()` API as the `ArgumentResolver`, the developer may write their logic to return the desired argument based on the given `IFreeTabViewItem` instance. Passing null to these two APIs will fall back to the `default ArgumentResolver`.
 
 ```csharp
 object? ArgumentResolver(IFreeTabViewItem arg)
@@ -413,7 +413,7 @@ id7[["Godot Calls"]] -.-> id6
 ```
 
 1. When calling one of the factory methods (`FreeTabView.CreateFromInstance`/`FreeTabView.CreateFromPrefab`), after the component has done basic initializing, the `_OnViewItemInitialize` method of each associated view item instance gets invoked.
-2. When calling any of the `Show` API on a `TabView`, the tab view will call `_OnViewItemHide` on the currently shown view item and call `_OnViewItemShown` on the target view item.
+2. When calling any of the `Show` APIs on a `TabView`, the tab view will call `_OnViewItemHide` on the currently shown view item and call `_OnViewItemShown` on the target view item.
 3. A `TabViewItem` delegates the `_Notification` engine call to `_OnViewItemNotification`, and calls `_OnViewItemPredelete` when necessary.
 
 ### ViewItemTweeners
