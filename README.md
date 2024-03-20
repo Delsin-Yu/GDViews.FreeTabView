@@ -1,5 +1,7 @@
 # GDViews.FreeTabView
 
+[![GitHub Release](https://img.shields.io/github/v/release/Delsin-Yu/GDViews.FreeTabView)](https://github.com/Delsin-Yu/GDViews.FreeTabView/releases/latest) [![NuGet Version](https://img.shields.io/nuget/v/GDViews.FreeTabView)](https://www.nuget.org/packages/GDViews.FreeTabView) ![NuGet Downloads](https://img.shields.io/nuget/dt/GDViews.FreeTabView) [![Stars](https://img.shields.io/github/stars/Delsin-Yu/GDViews.FreeTabView?color=brightgreen)](https://github.com/Delsin-Yu/GDViews.FreeTabView/stargazers) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/Delsin-Yu/GDViews.FreeTabView/blob/main/LICENSE)
+
 ## Introduction
 
 Supports in `Godot 4.1+` with .Net module.  
