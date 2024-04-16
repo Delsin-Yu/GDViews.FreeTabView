@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Godot;
 
-namespace GodotViews;
+namespace GodotViews.FreeTab;
 
 internal static class NodeUtils
 {

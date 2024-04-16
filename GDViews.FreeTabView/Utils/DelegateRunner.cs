@@ -2,7 +2,7 @@
 using System.Runtime.CompilerServices;
 using Godot;
 
-namespace GodotViews;
+namespace GodotViews.FreeTab;
 
 internal static class DelegateRunner
 {

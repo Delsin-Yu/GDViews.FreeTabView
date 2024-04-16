@@ -1,4 +1,4 @@
-namespace GodotViews;
+namespace GodotViews.FreeTab;
 
 /// <summary>
 /// Inherit this type to create a view item that's used by <see cref="FreeTabView"/>,

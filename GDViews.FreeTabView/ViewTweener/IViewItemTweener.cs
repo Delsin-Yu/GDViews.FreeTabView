@@ -1,6 +1,6 @@
 using Godot;
 
-namespace GodotViews;
+namespace GodotViews.FreeTab;
 
 /// <summary>
 /// Defines the behavior for view transitions.

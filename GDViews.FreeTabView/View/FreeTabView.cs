@@ -1,7 +1,7 @@
 ﻿using System;
 using Godot;
 
-namespace GodotViews;
+namespace GodotViews.FreeTab;
 
 /// <summary>
 /// Defines a Tab/Prefab setup.

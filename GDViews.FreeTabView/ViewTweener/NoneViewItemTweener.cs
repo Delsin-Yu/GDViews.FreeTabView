@@ -1,7 +1,7 @@
 ﻿using System;
 using Godot;
 
-namespace GodotViews.ViewTweeners;
+namespace GodotViews.FreeTab.ViewTweeners;
 
 /// <summary>
 /// This is the default tweener that does not have any animated transition properties, it instantly hides and shows the view.

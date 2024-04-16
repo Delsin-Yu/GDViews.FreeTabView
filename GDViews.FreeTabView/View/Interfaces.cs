@@ -1,4 +1,4 @@
-﻿namespace GodotViews;
+﻿namespace GodotViews.FreeTab;
 
 /// <summary>
 /// Use to represent a view item instance inheriting <see cref="FreeTabViewItemT{TOptionalArg}"/> or <see cref="FreeTabViewItem"/>.

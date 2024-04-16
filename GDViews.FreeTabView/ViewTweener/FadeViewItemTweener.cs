@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Godot;
 
-namespace GodotViews.ViewTweeners;
+namespace GodotViews.FreeTab.ViewTweeners;
 
 /// <summary>
 /// Fades views between solid and transparent for transitions.

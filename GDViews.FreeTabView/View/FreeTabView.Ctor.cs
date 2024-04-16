@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Godot;
 
-namespace GodotViews;
+namespace GodotViews.FreeTab;
 
 public partial class FreeTabView
 {
