@@ -86,7 +86,7 @@ This view item displays the current system time.
 
 ```csharp
 using Godot;
-using GodotViews;
+using GodotViews.FreeTab;
 
 /// <summary>
 /// Attach this script to a <see cref="Control"/> to make it a ViewItem.
